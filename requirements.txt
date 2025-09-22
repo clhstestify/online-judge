@@ -43,6 +43,3 @@ bleach
 pymdown-extensions
 mdx-breakless-lists
 beautifulsoup4
-PyMySQL>=1.0
-python-docx
-pdfminer.six

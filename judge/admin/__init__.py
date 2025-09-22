@@ -3,7 +3,6 @@ from django.contrib.admin.models import LogEntry
 
 from judge.admin.comments import CommentAdmin
 from judge.admin.contest import ContestAdmin, ContestParticipationAdmin, ContestTagAdmin
-from judge.admin.exam import ExamPaperAdmin
 from judge.admin.interface import (
     BlogPostAdmin,
     LicenseAdmin,

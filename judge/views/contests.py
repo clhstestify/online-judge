@@ -580,11 +580,7 @@ class ContestJoin(LoginRequiredMixin, ContestMixin, BaseDetailView):
         profile.save()
         contest._updating_stats_only = True
         contest.update_user_count()
-        if contest.format_name == "thptqg" and not participation.spectate:
-            destination = reverse("contest_exam", kwargs={"contest": contest.key})
-        else:
-            destination = reverse("problem_list")
-        return HttpResponseRedirect(destination)
+        return HttpResponseRedirect(reverse("problem_list"))
 
     def ask_for_access_code(self, form=None):
         contest = self.object
@@ -932,14 +928,11 @@ def get_contest_ranking_list(
     show_current_virtual=False,
     ranker=ranker,
 ):
-    if contest.format_name == "thptqg":
-        problems = contest.format.get_virtual_parts()
-    else:
-        problems = list(
-            contest.contest_problems.select_related("problem")
-            .defer("problem__description")
-            .order_by("order")
-        )
+    problems = list(
+        contest.contest_problems.select_related("problem")
+        .defer("problem__description")
+        .order_by("order")
+    )
 
     users = ranker(
         ranking_list(contest, problems),

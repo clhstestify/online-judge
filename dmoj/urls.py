@@ -63,7 +63,6 @@ from judge.views import (
     bookmark,
     widgets,
     internal,
-    exam,
 )
 from judge.views.problem_data import (
     ProblemDataView,
@@ -529,7 +528,6 @@ urlpatterns = [
                     name="contest_ranking_ajax",
                 ),
                 url(r"^/join$", contests.ContestJoin.as_view(), name="contest_join"),
-                url(r"^/exam$", exam.ExamTakeView.as_view(), name="contest_exam_take"),
                 url(r"^/leave$", contests.ContestLeave.as_view(), name="contest_leave"),
                 url(r"^/stats$", contests.ContestStats.as_view(), name="contest_stats"),
                 url(

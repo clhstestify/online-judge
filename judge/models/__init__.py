@@ -17,7 +17,6 @@ from judge.models.contest import (
     Rating,
     ContestProblemClarification,
 )
-from judge.models.exam import ExamChoice, ExamQuestion, ExamResponse
 from judge.models.interface import BlogPost, MiscConfig, NavigationBar, validate_regex
 from judge.models.message import PrivateMessage, PrivateMessageThread
 from judge.models.problem import (

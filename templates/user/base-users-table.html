@@ -7,7 +7,7 @@
 
     <th class="header points">
         {% if sort_links %}<a href="{{ sort_links.performance_points }}">{% endif %}
-        {{ points_header|default(_('Points')) }}
+        {{ _('Points') }}
         {%- if sort_links %}{{ sort_order.performance_points }}</a>{% endif %}
     </th>
     {% block after_point_head %}{% endblock %}

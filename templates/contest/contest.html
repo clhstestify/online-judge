@@ -84,7 +84,17 @@
         {% endcache %}
     </div>
 
-    {% if contest.ended or request.user.is_superuser or is_editor or is_tester %}
+    {% if contest.format_name == 'thptqg' %}
+        <div class="contest-exam-entry">
+            {% if request.user.is_authenticated and has_joined %}
+                <a href="{{ url('contest_exam_take', contest.key) }}" class="btn-midnightblue contest-exam-entry__cta">{{ _('Open exam interface') }}</a>
+            {% else %}
+                <p class="contest-exam-entry__hint">{{ _('Join the contest to start the exam interface.') }}</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if contest.format_name != 'thptqg' and (contest.ended or request.user.is_superuser or is_editor or is_tester) %}
         <hr>
         <div class="contest-problems">
             <h2 style="margin-bottom: 0.2em"><i class="fa fa-fw fa-question-circle"></i>{{ _('Problems') }} </h2>

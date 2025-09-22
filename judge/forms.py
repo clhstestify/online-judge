@@ -148,6 +148,22 @@ class ProblemSubmitForm(ModelForm):
         fields = ["language"]
 
 
+class ExamAnswerForm(Form):
+    choice = ChoiceField(
+        label=_("Answer"), widget=forms.RadioSelect(attrs={"class": "exam-choice"})
+    )
+
+    def __init__(self, *args, question=None, **kwargs):
+        if question is None:
+            raise ValueError("ExamAnswerForm requires a question instance")
+        self.question = question
+        choices = [
+            (option.label, option.text)
+            for option in question.choices.all().order_by("label")
+        ]
+        super().__init__(*args, **kwargs)
+        self.fields["choice"].choices = choices
+
 class EditOrganizationForm(ModelForm):
     class Meta:
         model = Organization

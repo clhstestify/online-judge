@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block title %}{{ contest.name }} - {{ _('Exam') }}{% endblock %}
+
+{% block content %}
+<div class="exam-wrapper">
+    <header class="exam-header">
+        <div class="exam-header__titles">
+            <h1 class="exam-header__contest">{{ contest.name }}</h1>
+            <div class="exam-header__meta">
+                <span>{{ _('Question') }} {{ question_index }} / {{ total_questions }}</span>
+            </div>
+        </div>
+        <div class="exam-header__timer" data-end-time="{{ end_time|date('c') }}">
+            <span class="exam-header__timer-label">{{ _('Time remaining') }}</span>
+            <span class="exam-header__timer-value" id="exam-countdown">--:--:--</span>
+        </div>
+    </header>
+
+    <div class="exam-body">
+        <aside class="exam-sidebar">
+            <h2 class="exam-sidebar__title">{{ _('Questions') }}</h2>
+            <ul class="exam-sidebar__list">
+                {% for item in progress %}
+                    <li class="exam-sidebar__item {% if item.id == question.id %}is-current{% endif %} {% if item.answered %}is-answered{% endif %}">
+                        <a href="{{ item.url }}" class="exam-sidebar__link">
+                            {{ item.label or item.index }}
+                            {% if item.choice %}
+                                <span class="exam-sidebar__choice">{{ item.choice }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </aside>
+
+        <main class="exam-main">
+            {% if read_only %}
+                <div class="alert alert-warning">{{ _('This contest attempt has ended. Answers can no longer be changed.') }}</div>
+            {% endif %}
+
+            <article class="exam-question">
+                <h2 class="exam-question__title">{{ _('Question') }} {{ question_index }}</h2>
+                <div class="exam-question__prompt">
+                    {% set prompt = question.prompt or question.contest_problem.problem.description %}
+                    {{ prompt|markdown|safe }}
+                </div>
+            </article>
+
+            <form method="post" class="exam-form">
+                {% csrf_token %}
+                <input type="hidden" name="question" value="{{ question.id }}">
+
+                {% if form.non_field_errors %}
+                    <div class="form-error">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                <div class="exam-options">
+                    {% for option in form.choice %}
+                        <label class="exam-option {% if current_response and option.choice_value == current_response.selected_choice %}is-selected{% endif %}">
+                            <span class="exam-option__input">{{ option.tag() }}</span>
+                            <span class="exam-option__label">{{ option.choice_value }}</span>
+                            <span class="exam-option__text">{{ option.choice_label }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+
+                {% if form.choice.errors %}
+                    <div class="form-error">{{ form.choice.errors }}</div>
+                {% endif %}
+
+                <div class="exam-actions">
+                    <button type="submit" name="nav" value="prev" class="btn" {% if question_index == 1 %}disabled{% endif %}>{{ _('Previous') }}</button>
+                    <button type="submit" name="nav" value="next" class="btn btn-midnightblue" {% if read_only %}disabled{% endif %}>{{ _('Save and continue') }}</button>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>
+
+<script>
+(function() {
+    const countdown = document.getElementById('exam-countdown');
+    const timerContainer = document.querySelector('.exam-header__timer');
+    const endTimeAttr = timerContainer ? timerContainer.getAttribute('data-end-time') : null;
+    if (countdown && endTimeAttr) {
+        const endTime = new Date(endTimeAttr).getTime();
+        const tick = function() {
+            const now = Date.now();
+            let diff = Math.max(0, Math.floor((endTime - now) / 1000));
+            const hours = String(Math.floor(diff / 3600)).padStart(2, '0');
+            diff %= 3600;
+            const minutes = String(Math.floor(diff / 60)).padStart(2, '0');
+            const seconds = String(diff % 60).padStart(2, '0');
+            countdown.textContent = hours + ':' + minutes + ':' + seconds;
+            if (endTime > now) {
+                window.setTimeout(tick, 1000);
+            }
+        };
+        tick();
+    }
+
+    const form = document.querySelector('.exam-form');
+    if (!form) {
+        return;
+    }
+    document.addEventListener('keydown', function(event) {
+        if (event.target && ['INPUT', 'TEXTAREA'].indexOf(event.target.tagName) !== -1) {
+            return;
+        }
+        const key = event.key.toUpperCase();
+        if (['A', 'B', 'C', 'D'].indexOf(key) !== -1) {
+            const input = form.querySelector('input[value="' + key + '"]');
+            if (input && !input.disabled) {
+                input.checked = true;
+            }
+        }
+    });
+})();
+</script>
+{% endblock %}
+
+{% block media %}
+<style>
+.exam-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.exam-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
+}
+.exam-body {
+    display: flex;
+    gap: 1.5rem;
+}
+.exam-sidebar {
+    width: 220px;
+}
+.exam-sidebar__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.exam-sidebar__item {
+    margin-bottom: 0.5rem;
+}
+.exam-sidebar__link {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-decoration: none;
+}
+.exam-sidebar__item.is-current .exam-sidebar__link {
+    background: #f0f4ff;
+    border-color: #3b6af0;
+}
+.exam-sidebar__item.is-answered .exam-sidebar__link {
+    border-color: #5cb85c;
+}
+.exam-main {
+    flex: 1;
+}
+.exam-question__prompt {
+    margin-bottom: 1.5rem;
+}
+.exam-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.exam-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+.exam-option.is-selected {
+    border-color: #3b6af0;
+    background: #eef3ff;
+}
+.exam-option__label {
+    font-weight: bold;
+    width: 1.5rem;
+}
+.exam-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+}
+.form-error {
+    margin-top: 0.5rem;
+    color: #d9534f;
+}
+.alert {
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+.alert-warning {
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+}
+</style>
+{% endblock %}

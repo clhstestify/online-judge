@@ -1,7 +1,7 @@
-# TLEOJ: TLE Online Judge
+# QTOJ: Quang Tri Online Judge
 
 ## Tổng quan
-- Trang chủ: [https://tleoj.edu.vn](https://tleoj.edu.vn)
+- Trang chủ: [https://quangtrioj.edu.vn](https://quangtrioj.edu.vn)
 - Nền tảng được xây dựng trên [LQDOJ](https://lqdoj.edu.vn/) và mở rộng cho cả các kỳ thi lập trình lẫn kỳ thi trắc nghiệm chuẩn THPTQG 2025.
 
 ## Điểm nổi bật

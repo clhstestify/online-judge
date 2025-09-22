@@ -1,6 +1,9 @@
 {% extends "user/base-users-table.html" %}
 
 {% set friends = request.profile.get_friends() if request.user.is_authenticated else {} %}
+{% if contest.format_name == 'thptqg' %}
+    {% set points_header = _('Score (0-10)') %}
+{% endif %}
 
 {% block after_rank_head %}
     {% if has_rating %}
@@ -56,11 +59,18 @@
     <th class="full-name" style="display:none;">{{ _('Fullname') }}</th>
     <th style="display:none;">{{ _('School') }}</th>
     {% for problem in problems %}
-        <th class="points header problem-score-col" title="{{ problem.problem.name }}"><a href="{{ url('problem_detail', problem.problem.code) }}">
-            {{- contest.get_label_for_problem(loop.index0) }}
-            <div class="point-denominator">{{ problem.points }}</div>
-            <div class="problem-code" style="display: none;">{{ problem.problem.code }}</div>
-        </a></th>
+        {% if contest.format_name == 'thptqg' %}
+            <th class="points header problem-score-col exam-part-header">
+                <div class="exam-part-name">{{ problem.label }}</div>
+                <div class="point-denominator">{{ problem.points|floatformat(2) }}</div>
+            </th>
+        {% else %}
+            <th class="points header problem-score-col" title="{{ problem.problem.name }}"><a href="{{ url('problem_detail', problem.problem.code) }}">
+                {{- contest.get_label_for_problem(loop.index0) }}
+                <div class="point-denominator">{{ problem.points }}</div>
+                <div class="problem-code" style="display: none;">{{ problem.problem.code }}</div>
+            </a></th>
+        {% endif %}
     {% endfor %}
 {% endblock %}
 

@@ -2,43 +2,47 @@
 
 ## Tổng quan
 - Trang chủ: [https://quangtrioj.edu.vn](https://quangtrioj.edu.vn)
-- Nền tảng được xây dựng trên [LQDOJ](https://lqdoj.edu.vn/) và mở rộng cho cả các kỳ thi lập trình lẫn kỳ thi trắc nghiệm chuẩn THPTQG 2025.
+- Nền tảng dựa trên mã nguồn mở DMOJ/LQDOJ và được mở rộng để phục vụ đồng thời các kỳ thi lập trình lẫn thể thức trắc nghiệm THPTQG 2025.
 
-## Điểm nổi bật
+## Tính năng nổi bật
 ### Nền tảng thi lập trình
 - Trình chấm tự động hỗ trợ nhiều ngôn ngữ: Assembly (x64), AWK, Brainfxck, C, C++03/11/14/17/20, Java 8/11, Scratch, Pascal, Perl, Python 2/3, PyPy 2/3.
 - Tích hợp phát hiện đạo văn thông qua [Stanford MOSS](https://theory.stanford.edu/~aiken/moss/).
-- Bảng xếp hạng thời gian thực, sự kiện trực tiếp bằng WebSocket và hệ thống newsletter để tương tác với thí sinh.
+- Hệ thống bảng xếp hạng thời gian thực, event trực tiếp bằng WebSocket và newsletter tương tác với thí sinh.
 
 ### Thể thức trắc nghiệm THPTQG 2025
-- Contest format **THPTQG Exam** chấm điểm theo thang 0–10 và hiển thị kết quả chi tiết theo từng phần trên bảng xếp hạng.
-- Giao diện thi chuyên biệt gồm trình xem đề PDF song song với phiếu trả lời ba phần (trắc nghiệm 4 lựa chọn, Đúng/Sai và trả lời ngắn).
-- Phiếu trả lời hỗ trợ lưu tạm, nộp bài một lần hoặc nhiều lần, tự động chuẩn hóa câu trả lời ngắn và thống kê số ý đúng trong phần Đúng/Sai.
-- Ban tổ chức có thể thêm đáp án thủ công hoặc nhập từ file DOCX/PDF, hệ thống sẽ tạo câu hỏi, đáp án và cập nhật lại cơ cấu điểm.
+- Contest format **THPTQG Exam** chấm điểm theo thang 0–10 dựa trên tổng điểm tối đa của từng phần và hiển thị chi tiết số điểm/ý đúng trên bảng xếp hạng.
+- Giao diện thi chuyên biệt hiển thị đề dưới dạng PDF cùng phiếu trả lời 3 phần: trắc nghiệm bốn lựa chọn, Đúng/Sai và trả lời ngắn.
+- Mỗi thí sinh được gán ngẫu nhiên mã đề khi vào phòng thi và chỉ có thể nộp một lần; sau khi nộp bài, phiếu trả lời chuyển về chế độ chỉ đọc.
+- Chế độ giám sát bắt buộc full screen, ghi nhận việc chuyển tab/ẩn cửa sổ, cảnh cáo 4 lần và khóa bài ở lần vi phạm thứ 5.
 
-## Thi trắc nghiệm THPTQG 2025
+## Luồng thi THPTQG 2025
 ### Cấu trúc đề & chấm điểm
 - **Phần I – Trắc nghiệm 4 lựa chọn:** mặc định 40 câu, mỗi câu đúng được 0,25 điểm.
-- **Phần II – Đúng/Sai:** mỗi câu có 4 ý; 1 ý đúng được 0,1 điểm, 2 ý đúng được 0,25 điểm, 3 ý đúng được 0,5 điểm và 4 ý đúng được trọn 1 điểm.
-- **Phần III – Trả lời ngắn:** điểm mỗi câu phụ thuộc môn thi (0,5 điểm cho Toán, 0,25 điểm cho các môn khác). Hệ thống bỏ khoảng trắng và không phân biệt hoa thường khi so đáp án.
-- Điểm tổng cộng được quy đổi về thang 0–10 và hiển thị cùng tổng số ý đúng/tổng ý trên bảng xếp hạng.
+- **Phần II – Đúng/Sai:** mỗi câu có 4 ý; 1 ý đúng được 0,1 điểm, 2 ý đúng được 0,25 điểm, 3 ý đúng được 0,5 điểm và đủ 4 ý đúng được 1 điểm.
+- **Phần III – Trả lời ngắn:** điểm tối đa phụ thuộc môn (0,5 điểm đối với Toán, 0,25 điểm đối với môn khác).
+- Hệ thống tự quy đổi tổng điểm về thang 10, đồng thời hiển thị tổng số ý đúng/tổng ý trên bảng xếp hạng.
 
-### Quy trình dành cho thí sinh
-1. Tham gia contest có format **THPTQG Exam** và mở giao diện thi.
-2. Xem đề trực tiếp bằng PDF được nhúng bên trái, điền đáp án vào ba phần của phiếu trả lời bên phải.
-3. Nhấn **Save answers** để lưu tạm thời hoặc **Submit and view ranking** khi đã hoàn thành. Thí sinh có thể trở lại cập nhật bài nếu contest vẫn còn thời gian.
-4. Sau khi nộp, bảng xếp hạng hiển thị điểm từng phần và điểm quy đổi.
+### Trải nghiệm của thí sinh
+1. Tham gia contest có format **THPTQG** để được gán mã đề ngẫu nhiên và truy cập giao diện thi.
+2. Đề thi PDF hiển thị song song với phiếu trả lời; thí sinh có thể lưu tạm (**Save answers**) hoặc nộp bài (**Submit and view ranking**).
+3. Hệ thống yêu cầu giữ chế độ toàn màn hình, cảnh báo ngay khi chuyển tab/ẩn cửa sổ và khóa bài khi vượt quá 5 vi phạm.
+4. Sau khi chọn **Submit**, bài làm bị khóa (`exam_finalized_at`) và chỉ cho phép xem lại kết quả.
 
-### Quy trình dành cho ban tổ chức
-1. Tạo contest và chọn format `THPTQG` trong phần cấu hình.
-2. Trong admin panel, truy cập **Exam papers** để tạo phiếu thi: chọn contest, môn thi (quy định điểm phần III), số câu mỗi phần và tải lên file PDF đề thi nếu có.
-3. Nhập đáp án bằng một trong hai cách:
-   - **Thủ công:** điền đáp án từng phần theo định dạng được hướng dẫn ngay trên form (ví dụ `1. A` cho Phần I, `1. Đ S S Đ` cho Phần II, `1. 12345` cho Phần III).
-   - **Tải lên file:** gửi file `.docx` hoặc `.pdf` theo định dạng chuẩn phía dưới; hệ thống sẽ đọc và đồng bộ câu hỏi, đáp án, điểm số.
-4. Lưu bản ghi để hệ thống tự sinh câu hỏi, đồng bộ lại số lượng câu hỏi từng phần và xuất hiện phiếu trả lời cho thí sinh.
+### Bảng xếp hạng và báo cáo
+- Mỗi phần thi xuất hiện như một cột ảo, hiển thị điểm đạt được, số ý đúng và tổng số câu/ý.
+- Khi kỳ thi kết thúc, bảng xếp hạng thêm cột mã đề để tiện đối soát giấy thi của từng thí sinh.
+- Admin có thể xem mã đề, số lần vi phạm và trạng thái khóa/nộp bài của từng thí sinh trong trang quản trị contest.
 
-### Định dạng file đáp án tải lên
-Sử dụng các thẻ phần `[PART1]`, `[PART2]`, `[PART3]` (hoặc `[PHẦN 1]`…), mỗi dòng tương ứng một câu. Ví dụ:
+## Quản trị & soạn đề thi
+1. Vào admin panel, tạo **Exam paper** cho contest: đặt mã đề, môn thi (để xác định điểm phần III), số câu từng phần và tùy chọn tải PDF đề thi.
+2. Nhập đáp án bằng một trong hai cách:
+   - **Thủ công:** điền đáp án vào ba vùng nhập, hệ thống tự đồng bộ câu hỏi theo định dạng THPTQG.
+   - **Tải file DOCX/PDF:** sử dụng mẫu có các thẻ `[PART1]`, `[PART2]`, `[PART3]`; công cụ parser sẽ đọc và cập nhật toàn bộ câu hỏi/đáp án.
+3. Sau khi lưu, hệ thống sinh dữ liệu câu hỏi, thiết lập lại số câu mỗi phần và phục vụ phiếu trả lời cho thí sinh.
+4. Từ trang contest admin, có thể gán lại mã đề cụ thể cho thí sinh, xem nhật ký vi phạm hoặc khóa/mở khóa quyền làm bài nếu cần.
+
+## Định dạng file đáp án mẫu
 
 ```
 [PART1]
@@ -47,24 +51,21 @@ Sử dụng các thẻ phần `[PART1]`, `[PART2]`, `[PART3]` (hoặc `[PHẦN 1
 
 [PART2]
 1. Đ S S Đ
-2. d d s s
+2. D D S S
 
 [PART3]
 1. 12345
 2. AB-CD
 ```
-
-- Có thể viết số câu dưới dạng `1.`, `Câu 1:`… Hệ thống chấp nhận các ký hiệu Đ/D/T/True (Đúng) và S/F/False (Sai) cho phần II.
-- Phần III cho phép chữ hoa/thường hoặc có khoảng trắng, hệ thống sẽ tự chuẩn hóa trước khi chấm.
+- Hỗ trợ tiền tố như `Câu 1:`, `Question 1 -`, v.v.; ký tự Đ/D/T/True cho Đúng và S/F/False cho Sai.
+- Phần III tự loại bỏ khoảng trắng và không phân biệt hoa thường khi so đáp án.
 
 ## Cài đặt nhanh
-Phần lớn các bước giống hướng dẫn của DMOJ: <https://docs.dmoj.ca/#/site/installation>. Khác biệt chính là thay repo `https://github.com/DMOJ/site.git` bằng `https://github.com/TLEJudge/online-judge.git`. Sau khi tạo môi trường Python, cài đặt phụ thuộc bằng `pip install -r requirements.txt` (bao gồm `python-docx` và `pdfminer.six` phục vụ nhập đáp án trắc nghiệm).
-
-### Một số lỗi thường gặp
-1. Thiếu `local_settings.py`: sao chép file mẫu để vượt qua bước kiểm tra.
-2. Chưa cấu hình đường dẫn thư mục bài tập trong `local_settings.py`.
-3. Chưa cấu hình thư mục static trong `local_settings.py` (`STATIC_FILES`).
-4. Thiếu file cấu hình cho judge: dùng `python dmojauto-conf` để sinh mẫu, tham khảo thêm tại <https://github.com/DMOJ/docs/tree/master/sample_files>.
+Làm theo hướng dẫn cài đặt DMOJ tại <https://docs.dmoj.ca/#/site/installation> và thay repository thành `https://github.com/TLEJudge/online-judge.git`. Sau khi tạo môi trường Python:
+```bash
+pip install -r requirements.txt
+```
+Các gói bổ sung `python-docx` và `pdfminer.six` được sử dụng để nhập đáp án từ file Word/PDF.
 
 ## Vận hành cục bộ
 1. Kích hoạt virtualenv:
@@ -75,15 +76,15 @@ Phần lớn các bước giống hướng dẫn của DMOJ: <https://docs.dmoj.
    ```bash
    python manage.py runserver 0.0.0.0:80
    ```
-3. Mở cầu nối (bridge) ở một terminal khác:
+3. Mở cầu nối (bridge) ở terminal khác:
    ```bash
    python manage.py runbridged
    ```
-4. Khởi chạy judge (có thể chạy nhiều judge trên các terminal riêng):
+4. Khởi chạy judge (có thể chạy nhiều judge ở các terminal riêng):
    ```bash
    dmoj 0.0.0.0 -p 9999 -c <path-to-config.yml>
    ```
-5. (Tuỳ chọn) Worker Celery cho các tác vụ nền:
+5. (Tuỳ chọn) Worker Celery xử lý tác vụ nền:
    ```bash
    celery -A dmoj_celery worker
    ```
@@ -91,8 +92,7 @@ Phần lớn các bước giống hướng dẫn của DMOJ: <https://docs.dmoj.
    ```bash
    node websocket/daemon.js
    ```
-
-## Triển khai & bảo trì
+## Bảo trì
 1. **Cập nhật dịch thuật**
    ```bash
    python manage.py makemessages

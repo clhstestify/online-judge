@@ -597,12 +597,12 @@
         <div>
             <h1>{{ contest.name }}</h1>
             <div class="exam-summary">
-                {{ paper.get_subject_display }} ·
-                {{ _('Part I: %(count)s questions', count=part_counts.part1 or 0) }},
-                {{ _('Part II: %(count)s questions × 4 statements', count=part_counts.part2 or 0) }}{% if has_part3 and part_counts.part3 %}
-                , {{ _('Part III: %(count)s questions', count=part_counts.part3 or 0) }}{% endif %}
+                {{ paper.get_subject_display() }} ·
+                {{ _('Part I: %(count)s questions')|format(count=part_counts.part1) }},
+                {{ _('Part II: %(count)s questions × 4 statements')|format(count=part_counts.part2) }}{% if has_part3 and part_counts.part3 %},
+                {{ _('Part III: %(count)s questions')|format(count=part_counts.part3) }}{% endif %}
             </div>
-            <div class="exam-code">{{ _('Exam code: %(code)s', code=exam_code or '') }}</div>
+            <div class="exam-code">{{ _('Exam code: %(code)s')|format(code=exam_code) }}</div>
         </div>
         {% if participation.end_time %}
             <div class="exam-timer">
@@ -646,9 +646,7 @@
                     <h2>
                         {{ _('Part I – Multiple choice') }}
                         <span class="section-meta">
-                            {{ _('%(count)s questions · %(points)s pts/question',
-                                 count=part_counts.part1 or 0,
-                                 points=part_points.part1|floatformat(2) or 0) }}
+                            {{ _('%(count)s questions · %(points)s pts/question')|format(count=part_counts.part1, points=part_points.part1|floatformat(2)) }}
                         </span>
                     </h2>
                     <div class="bubble-grid">
@@ -672,9 +670,7 @@
                     <h2>
                         {{ _('Part II – True/False') }}
                         <span class="section-meta">
-                            {{ _('%(count)s questions · up to %(points)s pts/question',
-                                 count=part_counts.part2 or 0,
-                                 points=part_points.part2|floatformat(2) or 0) }}
+                            {{ _('%(count)s questions · up to %(points)s pts/question')|format(count=part_counts.part2, points=part_points.part2|floatformat(2)) }}
                         </span>
                     </h2>
                     <div class="true-false-grid">
@@ -706,9 +702,7 @@
                         <h2>
                             {{ _('Part III – Short answers') }}
                             <span class="section-meta">
-                                {{ _('%(count)s questions · %(points)s pts/question',
-                                     count=part_counts.part3 or 0,
-                                     points=part_points.part3|floatformat(2) or 0) }}
+                                {{ _('%(count)s questions · %(points)s pts/question')|format(count=part_counts.part3, points=part_points.part3|floatformat(2)) }}
                             </span>
                         </h2>
                         <div class="short-answer-grid">

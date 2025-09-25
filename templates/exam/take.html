@@ -2,6 +2,10 @@
 
 {% block title %}{{ contest.name }} – {{ _('Exam') }}{% endblock %}
 
+{% block content_title %}{{ contest.name }} – {{ _('Exam') }}{% endblock %}
+
+{% block title_ruler %}{% endblock %}
+
 {% block media %}
     <style>
         .exam-shell {
@@ -582,7 +586,7 @@
     </script>
 {% endblock %}
 
-{% block content %}
+{% block body %}
 <div class="exam-shell"
      data-violation-url="{{ url('contest_exam_violation', contest.key) }}"
      data-violation-count="{{ violation_count }}"

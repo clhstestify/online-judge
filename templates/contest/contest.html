@@ -19,6 +19,17 @@
 {% block two_col_media %}
     {% include "comments/media-css.html" %}
     {% include "actionbar/media-css.html" %}
+    <style>
+        .contest-exam-launch {
+            margin: 1rem 0;
+        }
+
+        .contest-exam-launch-button {
+            display: inline-block;
+            padding: 0.65rem 1.5rem;
+            text-align: center;
+        }
+    </style>
 {% endblock %}
 
 {% block middle_content %}
@@ -79,9 +90,11 @@
     {% endif %}
 
     {% if contest.format_name == 'thptqg' and contest.exam_papers.exists() and contest.is_in_contest(request.user) %}
-        <a class="contest-join-pseudotab btn-midnightblue" href="{{ url('contest_exam', contest.key) }}">
-            {{ _('Go to exam interface') }}
-        </a>
+        <div class="contest-exam-launch">
+            <a class="btn-midnightblue contest-exam-launch-button" href="{{ url('contest_exam', contest.key) }}">
+                {{ _('Go to exam interface') }}
+            </a>
+        </div>
     {% endif %}
 
     <div class="content-description">

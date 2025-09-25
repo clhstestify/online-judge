@@ -43,7 +43,6 @@
 4. Từ trang contest admin, có thể gán lại mã đề cụ thể cho thí sinh, xem nhật ký vi phạm hoặc khóa/mở khóa quyền làm bài nếu cần.
 
 ## Định dạng file đáp án mẫu
-
 ```
 [PART1]
 1. A

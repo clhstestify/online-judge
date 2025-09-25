@@ -232,9 +232,6 @@ msgid "Language"
 msgstr "Ngôn ngữ"
 
 #: judge/admin/problem.py:220
-msgid "History"
-msgstr "Lịch sử"
-
 #: judge/admin/problem.py:272 templates/problem/list-base.html:108
 msgid "Authors"
 msgstr "Các tác giả"
@@ -5943,3 +5940,237 @@ msgstr "Chọn tất cả"
 
 #~ msgid "Hard"
 #~ msgstr "Khó"
+
+msgid "THPTQG Exam"
+msgstr "Kỳ thi THPTQG"
+
+msgid "Score (0-10)"
+msgstr "Điểm (0-10)"
+
+msgid "Go to exam interface"
+msgstr "Vào làm bài thi"
+
+msgid "Exam"
+msgstr "Bài thi"
+
+msgid "Question %(current)s of %(total)s"
+msgstr "Câu hỏi %(current)s/%(total)s"
+
+msgid "Time remaining:"
+msgstr "Thời gian còn lại:"
+
+msgid "Question prompt"
+msgstr "Đề bài"
+
+msgid "Previous"
+msgstr "Trước"
+
+msgid "Save and next"
+msgstr "Lưu và tiếp"
+
+msgid "Finish exam"
+msgstr "Nộp bài"
+
+msgid "Join required"
+msgstr "Cần tham gia"
+
+msgid "You need to join this contest to access the exam."
+msgstr "Bạn cần tham gia kỳ thi này để vào làm bài."
+
+msgid "No exam questions"
+msgstr "Chưa có câu hỏi"
+
+msgid "This contest does not have any configured exam questions."
+msgstr "Kỳ thi này chưa được cấu hình câu hỏi trắc nghiệm."
+
+msgid "Your answer has been saved."
+msgstr "Đã lưu câu trả lời của bạn."
+
+msgid "Multiple choice"
+msgstr "Trắc nghiệm"
+
+msgid "True/False"
+msgstr "Đúng/Sai"
+
+msgid "Short answer"
+msgstr "Điền đáp án"
+
+msgid "Answer"
+msgstr "Đáp án"
+
+msgid "True"
+msgstr "Đúng"
+
+msgid "False"
+msgstr "Sai"
+
+msgid "Mathematics"
+msgstr "Toán học"
+
+msgid "Physics"
+msgstr "Vật lý"
+
+msgid "Chemistry"
+msgstr "Hóa học"
+
+msgid "Biology"
+msgstr "Sinh học"
+
+msgid "History"
+msgstr "Lịch sử"
+
+msgid "Geography"
+msgstr "Địa lý"
+
+msgid "Civic education"
+msgstr "Giáo dục công dân"
+
+msgid "Other foreign language"
+msgstr "Ngoại ngữ khác"
+
+msgid "part I questions"
+msgstr "số câu phần I"
+
+msgid "part II questions"
+msgstr "số câu phần II"
+
+msgid "part III questions"
+msgstr "số câu phần III"
+
+msgid "exam PDF"
+msgstr "file đề thi PDF"
+
+msgid "exam paper"
+msgstr "đề thi"
+
+msgid "Manual part I answers"
+msgstr "Nhập đáp án phần I"
+
+msgid "One question per line, e.g. \"1. A\"."
+msgstr "Mỗi dòng một câu, ví dụ \"1. A\"."
+
+msgid "Manual part II answers"
+msgstr "Nhập đáp án phần II"
+
+msgid "Use Đ for true and S for false, e.g. \"1. Đ S S Đ\"."
+msgstr "Dùng Đ cho đúng và S cho sai, ví dụ \"1. Đ S S Đ\"."
+
+msgid "Manual part III answers"
+msgstr "Nhập đáp án phần III"
+
+msgid "One short answer per line, e.g. \"1. 12345\"."
+msgstr "Mỗi dòng một đáp án ngắn, ví dụ \"1. 12345\"."
+
+msgid "Upload answer file"
+msgstr "Tải tệp đáp án"
+
+msgid "Accepted .docx or .pdf with sections [PART1], [PART2], [PART3]. Example: [PART1]\n1. A\n…"
+msgstr "Chấp nhận tệp .docx hoặc .pdf với các phần [PART1], [PART2], [PART3]. Ví dụ: [PART1]\n1. A\n…"
+
+msgid "Choose either manual answers or an uploaded file, not both."
+msgstr "Chỉ chọn một trong hai cách: nhập thủ công hoặc tải tệp đáp án."
+
+msgid "Exam not configured"
+msgstr "Chưa thiết lập đề thi"
+
+msgid "This contest does not have an exam paper yet."
+msgstr "Kỳ thi này chưa có đề thi."
+
+msgid "Your answers have been saved."
+msgstr "Đã lưu câu trả lời của bạn."
+
+msgid "Part I"
+msgstr "Phần I"
+
+msgid "Part II"
+msgstr "Phần II"
+
+msgid "Part III"
+msgstr "Phần III"
+
+msgid "%(count)s questions"
+msgstr "%(count)s câu hỏi"
+
+msgid "Exam document"
+msgstr "Đề thi"
+
+msgid "Exam PDF is not available yet."
+msgstr "Chưa có file PDF của đề thi."
+
+msgid "Part I – Multiple choice"
+msgstr "Phần I – Trắc nghiệm"
+
+msgid "Part II – True/False"
+msgstr "Phần II – Đúng/Sai"
+
+msgid "Part III – Short answers"
+msgstr "Phần III – Điền đáp án"
+
+msgid "%(count)s questions · %(points)s pts/question"
+msgstr "%(count)s câu · %(points)s điểm/câu"
+
+msgid "%(count)s questions · up to %(points)s pts/question"
+msgstr "%(count)s câu · tối đa %(points)s điểm/câu"
+
+msgid "Part I: %(count)s questions"
+msgstr "Phần I: %(count)s câu"
+
+msgid "Part II: %(count)s questions × 4 statements"
+msgstr "Phần II: %(count)s câu × 4 ý"
+
+msgid "Part III: %(count)s questions"
+msgstr "Phần III: %(count)s câu"
+
+msgid "Save answers"
+msgstr "Lưu đáp án"
+
+msgid "Submit and view ranking"
+msgstr "Nộp bài và xem bảng xếp hạng"
+
+msgid "Clear selection on screen"
+msgstr "Xóa lựa chọn trên màn hình"
+
+msgid "Exam code is required."
+msgstr "Yêu cầu nhập mã đề."
+
+msgid "Exam settings"
+msgstr "Thiết lập bài thi"
+
+msgid "Exam code"
+msgstr "Mã đề thi"
+
+msgid "Your exam session has been locked due to violations."
+msgstr "Bài thi của bạn đã bị khóa do vi phạm."
+
+msgid "You have already submitted your exam."
+msgstr "Bạn đã nộp bài thi."
+
+msgid "Your exam has been submitted."
+msgstr "Bài thi của bạn đã được nộp."
+
+msgid "Exam code: %(code)s"
+msgstr "Mã đề: %(code)s"
+
+msgid "Your exam session has been locked because of excessive violations."
+msgstr "Phiên làm bài của bạn bị khóa do vi phạm quá nhiều."
+
+msgid "You have submitted the exam. Answers are read-only."
+msgstr "Bạn đã nộp bài. Các câu trả lời chỉ được xem."
+
+msgid "You have exceeded the maximum number of violations. Your exam is closed."
+msgstr "Bạn đã vượt quá số lần vi phạm cho phép. Bài thi đã bị đóng."
+
+msgid "Do not leave full-screen mode. Further violations will stop your exam."
+msgstr "Không thoát chế độ toàn màn hình. Vi phạm thêm sẽ dừng bài thi."
+
+msgid "Monitoring warning: unable to record violation."
+msgstr "Cảnh báo giám sát: không thể ghi nhận vi phạm."
+
+msgid "Full-screen mode required"
+msgstr "Yêu cầu chế độ toàn màn hình"
+
+msgid "To continue the exam, please switch to full-screen mode and keep the exam window active. Leaving full-screen will be recorded as a violation."
+msgstr "Để tiếp tục làm bài, hãy chuyển sang chế độ toàn màn hình và giữ cửa sổ bài thi luôn hoạt động. Thoát toàn màn hình sẽ bị tính là vi phạm."
+
+msgid "Enter full-screen"
+msgstr "Bật toàn màn hình"

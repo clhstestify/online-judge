@@ -14,7 +14,15 @@ from reversion.admin import VersionAdmin
 from reversion_compare.admin import CompareVersionAdmin
 
 from django_ace import AceWidget
-from judge.models import Contest, ContestProblem, ContestSubmission, Profile, Rating
+from judge.models import (
+    Contest,
+    ContestProblem,
+    ContestSubmission,
+    ContestParticipation,
+    ExamPaper,
+    Profile,
+    Rating,
+)
 from judge.ratings import rate_contest
 from judge.widgets import (
     AdminHeavySelect2MultipleWidget,
@@ -415,18 +423,58 @@ class ContestAdmin(CompareVersionAdmin):
 
 class ContestParticipationForm(ModelForm):
     class Meta:
+        model = ContestParticipation
+        fields = "__all__"
         widgets = {
             "contest": AdminSelect2Widget(),
             "user": AdminHeavySelect2Widget(data_view="profile_select2"),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        field = self.fields.get("assigned_exam_paper")
+        if not field:
+            return
+        queryset = ExamPaper.objects.all().order_by("contest__name", "code")
+        contest = None
+        if self.instance and self.instance.pk:
+            contest = self.instance.contest
+        else:
+            contest_id = self.initial.get("contest") or self.data.get("contest")
+            if contest_id:
+                try:
+                    contest = Contest.objects.get(pk=contest_id)
+                except Contest.DoesNotExist:
+                    contest = None
+        if contest:
+            queryset = contest.exam_papers.order_by("code")
+        field.queryset = queryset
+
 
 class ContestParticipationAdmin(admin.ModelAdmin):
-    fields = ("contest", "user", "real_start", "virtual", "is_disqualified")
+    fieldsets = (
+        (
+            None,
+            {"fields": ("contest", "user", "real_start", "virtual", "is_disqualified")},
+        ),
+        (
+            _("Exam settings"),
+            {
+                "fields": (
+                    "assigned_exam_paper",
+                    "exam_violation_count",
+                    "exam_locked",
+                    "exam_locked_at",
+                    "exam_finalized_at",
+                )
+            },
+        ),
+    )
     list_display = (
         "contest",
         "username",
         "show_virtual",
+        "exam_code",
         "real_start",
         "score",
         "cumtime",
@@ -437,11 +485,13 @@ class ContestParticipationAdmin(admin.ModelAdmin):
     search_fields = ("contest__key", "contest__name", "user__user__username")
     form = ContestParticipationForm
     date_hierarchy = "real_start"
+    readonly_fields = ("exam_locked_at", "exam_finalized_at")
 
     def get_queryset(self, request):
         return (
             super(ContestParticipationAdmin, self)
             .get_queryset(request)
+            .select_related("assigned_exam_paper")
             .only(
                 "contest__name",
                 "contest__format_name",
@@ -452,6 +502,11 @@ class ContestParticipationAdmin(admin.ModelAdmin):
                 "cumtime",
                 "tiebreaker",
                 "virtual",
+                "assigned_exam_paper__code",
+                "exam_violation_count",
+                "exam_locked",
+                "exam_locked_at",
+                "exam_finalized_at",
             )
         )
 
@@ -478,10 +533,17 @@ class ContestParticipationAdmin(admin.ModelAdmin):
     recalculate_results.short_description = _("Recalculate results")
 
     def username(self, obj):
-        return obj.user.username
+        return obj.user.user.username
 
     username.short_description = _("username")
     username.admin_order_field = "user__user__username"
+
+    def exam_code(self, obj):
+        if obj.assigned_exam_paper:
+            return obj.assigned_exam_paper.code
+        return "—"
+
+    exam_code.short_description = _("Exam code")
 
     def show_virtual(self, obj):
         return obj.virtual or "-"

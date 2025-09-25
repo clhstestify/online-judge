@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from django.db import models, transaction
-from django.db.models import CASCADE, Q
+from django.db.models import CASCADE, Q, SET_NULL
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -649,6 +649,33 @@ class ContestParticipation(models.Model):
     )
     format_data = JSONField(
         verbose_name=_("contest format specific data"), null=True, blank=True
+    )
+    assigned_exam_paper = models.ForeignKey(
+        "judge.ExamPaper",
+        verbose_name=_("assigned exam paper"),
+        null=True,
+        blank=True,
+        on_delete=SET_NULL,
+        related_name="assigned_participations",
+    )
+    exam_violation_count = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("exam violation count"),
+    )
+    exam_locked = models.BooleanField(
+        default=False,
+        verbose_name=_("exam locked"),
+        help_text=_("Whether the participant has been locked out of the exam."),
+    )
+    exam_locked_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_("exam locked at"),
+    )
+    exam_finalized_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_("exam submitted at"),
     )
 
     def recompute_results(self):

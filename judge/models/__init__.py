@@ -17,6 +17,7 @@ from judge.models.contest import (
     Rating,
     ContestProblemClarification,
 )
+from judge.models.exam import ExamChoice, ExamPaper, ExamQuestion, ExamResponse
 from judge.models.interface import BlogPost, MiscConfig, NavigationBar, validate_regex
 from judge.models.message import PrivateMessage, PrivateMessageThread
 from judge.models.problem import (
@@ -63,6 +64,10 @@ revisions.register(LanguageLimit)
 revisions.register(LanguageTemplate)
 revisions.register(Contest, follow=["contest_problems"])
 revisions.register(ContestProblem)
+revisions.register(ExamPaper)
+revisions.register(ExamQuestion)
+revisions.register(ExamChoice)
+revisions.register(ExamResponse)
 revisions.register(Organization)
 revisions.register(BlogPost)
 revisions.register(Solution)

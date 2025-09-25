@@ -598,9 +598,9 @@
             <h1>{{ contest.name }}</h1>
             <div class="exam-summary">
                 {{ paper.get_subject_display() }} ·
-                {{ _('Part I: %(count)s questions')|format(count=part_counts.part1) }},
-                {{ _('Part II: %(count)s questions × 4 statements')|format(count=part_counts.part2) }}{% if has_part3 and part_counts.part3 %},
-                {{ _('Part III: %(count)s questions')|format(count=part_counts.part3) }}{% endif %}
+                {% trans count=part_counts.part1 %}Part I: {{ count }} questions{% endtrans %},
+                {% trans count=part_counts.part2 %}Part II: {{ count }} questions × 4 statements{% endtrans %}{% if has_part3 and part_counts.part3 %},
+                {% trans count=part_counts.part3 %}Part III: {{ count }} questions{% endtrans %}{% endif %}
             </div>
             <div class="exam-code">{{ _('Exam code: %(code)s')|format(code=exam_code) }}</div>
         </div>

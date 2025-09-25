@@ -8,6 +8,7 @@
 
 {% block media %}
     <style>
+        /* --- Full original styles (kept) --- */
         .exam-shell {
             max-width: 1280px;
             margin: 2rem auto;
@@ -421,6 +422,47 @@
             font-size: 1.05rem;
             line-height: 1.6;
         }
+
+        /* ---------- Responsive & auto-wrap tweaks (added) ---------- */
+        .bubble-grid {
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        }
+
+        .bubble-row {
+            flex-wrap: wrap;
+        }
+
+        .bubble-options {
+            flex-wrap: wrap;
+        }
+
+        .bubble-option span {
+            width: clamp(34px, 6vw, 46px);
+            height: clamp(34px, 6vw, 46px);
+        }
+
+        .true-false-statements {
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        }
+
+        .pdf-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 160px;
+        }
+
+        .pdf-object {
+            display: none; /* object will be used as fallback if iframe fails */
+            width: 100%;
+            height: 82vh;
+        }
+
+        .pdf-fallback {
+            padding: 1.25rem;
+            text-align: center;
+            color: #64748b;
+            font-size: 1rem;
+        }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -582,6 +624,79 @@
             if (finalized) {
                 disableForm();
             }
+
+            /* ---------- PDF availability check & iframe fallback ---------- */
+            function showPdfFallback(url) {
+                const fallback = document.getElementById('pdf-fallback');
+                const obj = document.querySelector('.pdf-object');
+                const iframe = document.getElementById('exam-pdf-frame');
+                if (iframe) iframe.style.display = 'none';
+                if (obj) obj.style.display = 'block';
+                if (fallback) {
+                    fallback.style.display = 'block';
+                    fallback.innerHTML = '{{ _('Exam PDF could not be loaded in the viewer.') }} <a href="' + url + '">{{ _('Download it here') }}</a>';
+                }
+            }
+
+            function checkPdf(url) {
+                if (!url) return;
+                // try a HEAD request to see if resource exists and whether it can be framed
+                fetch(url, { method: 'HEAD', credentials: 'same-origin' })
+                    .then(function (resp) {
+                        if (!resp.ok) {
+                            showPdfFallback(url);
+                            return;
+                        }
+                        // If X-Frame-Options prevents framing, the header may be present
+                        const xfo = resp.headers.get('x-frame-options') || resp.headers.get('X-Frame-Options');
+                        if (xfo) {
+                            const v = xfo.toLowerCase();
+                            if (v.indexOf('deny') !== -1 || v.indexOf('sameorigin') !== -1) {
+                                showPdfFallback(url);
+                                return;
+                            }
+                        }
+                        // as a last resort, attempt to detect load failure after a short timeout
+                        const iframe = document.getElementById('exam-pdf-frame');
+                        if (iframe) {
+                            let loaded = false;
+                            iframe.addEventListener('load', function () {
+                                loaded = true;
+                                // iframe loaded successfully; ensure viewer visible
+                                const obj = document.querySelector('.pdf-object');
+                                if (obj) obj.style.display = 'none';
+                                const fallback = document.getElementById('pdf-fallback');
+                                if (fallback) fallback.style.display = 'none';
+                            });
+                            // if not loaded within 3s, show fallback (covers certain XFO cases)
+                            window.setTimeout(function () {
+                                if (!loaded) {
+                                    try {
+                                        // try access contentDocument (may throw cross-origin)
+                                        const doc = iframe.contentDocument || iframe.contentWindow.document;
+                                        if (doc && doc.body && doc.body.childElementCount > 0) {
+                                            // seems fine
+                                            return;
+                                        }
+                                    } catch (e) {
+                                        // access denied -> likely non-embeddable
+                                    }
+                                    showPdfFallback(url);
+                                }
+                            }, 3000);
+                        }
+                    })
+                    .catch(function () {
+                        showPdfFallback(url);
+                    });
+            }
+
+            // If there's a pdf url in the DOM, try to validate it
+            const pdfFrame = document.getElementById('exam-pdf-frame');
+            if (pdfFrame) {
+                const url = pdfFrame.getAttribute('src').split('#')[0];
+                checkPdf(url);
+            }
         });
     </script>
 {% endblock %}
@@ -597,12 +712,12 @@
         <div>
             <h1>{{ contest.name }}</h1>
             <div class="exam-summary">
-                {{ paper.get_subject_display() }} ·
-                {% trans count=part_counts.part1 %}Part I: {{ count }} questions{% endtrans %},
-                {% trans count=part_counts.part2 %}Part II: {{ count }} questions × 4 statements{% endtrans %}{% if has_part3 and part_counts.part3 %},
-                {% trans count=part_counts.part3 %}Part III: {{ count }} questions{% endtrans %}{% endif %}
+                {{ paper.get_subject_display }} ·
+                {{ _('Part I: {count} questions').format(count=(part_counts.part1 if part_counts else 0)) }},
+                {{ _('Part II: {count} questions × 4 statements').format(count=(part_counts.part2 if part_counts else 0)) }}{% if has_part3 and part_counts and part_counts.part3 %},
+                {{ _('Part III: {count} questions').format(count=(part_counts.part3 if part_counts else 0)) }}{% endif %}
             </div>
-            <div class="exam-code">{{ _('Exam code: %(code)s')|format(code=exam_code) }}</div>
+            <div class="exam-code">{{ _('Exam code: {code}').format(code=(exam_code or '')) }}</div>
         </div>
         {% if participation.end_time %}
             <div class="exam-timer">
@@ -630,8 +745,16 @@
 
     <div class="exam-body">
         <div class="exam-document">
-            {% if paper.pdf %}
-                <iframe src="{{ paper.pdf.url }}#toolbar=0" title="{{ _('Exam document') }}"></iframe>
+            {% if paper and paper.pdf %}
+                <div class="pdf-wrapper">
+                    <iframe id="exam-pdf-frame" src="{{ paper.pdf.url }}#toolbar=0" title="{{ _('Exam document') }}" sandbox="allow-same-origin allow-scripts"></iframe>
+                    <object class="pdf-object" data="{{ paper.pdf.url }}" type="application/pdf">
+                        <p class="pdf-fallback">{{ _('Your browser cannot display the PDF. You can') }} <a href="{{ paper.pdf.url }}">{{ _('download it here') }}</a>.</p>
+                    </object>
+                    <div id="pdf-fallback" class="no-document pdf-fallback" style="display:none;">
+                        {{ _('Exam PDF could not be loaded in the viewer.') }} <a href="{{ paper.pdf.url }}">{{ _('Download it here') }}</a>
+                    </div>
+                </div>
             {% else %}
                 <div class="no-document">{{ _('Exam PDF is not available yet.') }}</div>
             {% endif %}
@@ -640,13 +763,16 @@
         <div class="exam-sheet">
             <form method="post" id="exam-form">
                 {% csrf_token %}
-                {{ form.non_field_errors }}
+                {{ form.non_field_errors|safe }}
 
                 <div class="sheet-section">
                     <h2>
                         {{ _('Part I – Multiple choice') }}
                         <span class="section-meta">
-                            {{ _('%(count)s questions · %(points)s pts/question')|format(count=part_counts.part1, points=part_points.part1|floatformat(2)) }}
+                            {{ _('{count} questions · {points} pts/question').format(
+                                count=(part_counts.part1 if part_counts else 0),
+                                points=(part_points.part1|floatformat(2) if part_points else 0)
+                            ) }}
                         </span>
                     </h2>
                     <div class="bubble-grid">
@@ -656,7 +782,7 @@
                                 <div class="bubble-options">
                                     {% for radio in field %}
                                         <label class="bubble-option">
-                                            {{ radio.tag }}
+                                            {{ radio.tag()|safe }}
                                             <span>{{ radio.choice_label }}</span>
                                         </label>
                                     {% endfor %}
@@ -670,7 +796,10 @@
                     <h2>
                         {{ _('Part II – True/False') }}
                         <span class="section-meta">
-                            {{ _('%(count)s questions · up to %(points)s pts/question')|format(count=part_counts.part2, points=part_points.part2|floatformat(2)) }}
+                            {{ _('{count} questions · up to {points} pts/question').format(
+                                count=(part_counts.part2 if part_counts else 0),
+                                points=(part_points.part2|floatformat(2) if part_points else 0)
+                            ) }}
                         </span>
                     </h2>
                     <div class="true-false-grid">
@@ -684,7 +813,7 @@
                                             <div class="statement-options">
                                                 {% for radio in field %}
                                                     <label class="statement-option">
-                                                        {{ radio.tag }}
+                                                        {{ radio.tag()|safe }}
                                                         <span>{{ radio.choice_label }}</span>
                                                     </label>
                                                 {% endfor %}
@@ -702,7 +831,10 @@
                         <h2>
                             {{ _('Part III – Short answers') }}
                             <span class="section-meta">
-                                {{ _('%(count)s questions · %(points)s pts/question')|format(count=part_counts.part3, points=part_points.part3|floatformat(2)) }}
+                                {{ _('{count} questions · {points} pts/question').format(
+                                    count=(part_counts.part3 if part_counts else 0),
+                                    points=(part_points.part3|floatformat(2) if part_points else 0)
+                                ) }}
                             </span>
                         </h2>
                         <div class="short-answer-grid">
@@ -710,7 +842,7 @@
                                 <div class="short-answer-row">
                                     <div class="bubble-number">{{ question.number }}</div>
                                     <div class="short-answer-input">
-                                        {{ field }}
+                                        {{ field|safe }}
                                     </div>
                                 </div>
                             {% endfor %}

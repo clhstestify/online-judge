@@ -1,7 +1,7 @@
-# TLEOJ: TLE Online Judge
+# QTOJ: Quang Tri Online Judge
 
 ## Tổng quan
-- Trang chủ: [https://tleoj.edu.vn](https://tleoj.edu.vn)
+- Trang chủ: [https://quangtrioj.edu.vn](https://quangtrioj.edu.vn)
 - Nền tảng dựa trên mã nguồn mở DMOJ/LQDOJ và được mở rộng để phục vụ đồng thời các kỳ thi lập trình lẫn thể thức trắc nghiệm THPTQG 2025.
 
 ## Tính năng nổi bật
@@ -91,7 +91,6 @@ Các gói bổ sung `python-docx` và `pdfminer.six` được sử dụng để 
    ```bash
    node websocket/daemon.js
    ```
-
 ## Bảo trì
 1. **Cập nhật dịch thuật**
    ```bash

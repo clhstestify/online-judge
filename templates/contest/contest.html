@@ -19,6 +19,17 @@
 {% block two_col_media %}
     {% include "comments/media-css.html" %}
     {% include "actionbar/media-css.html" %}
+    <style>
+        .contest-exam-launch {
+            margin: 1rem 0;
+        }
+
+        .contest-exam-launch-button {
+            display: inline-block;
+            padding: 0.65rem 1.5rem;
+            text-align: center;
+        }
+    </style>
 {% endblock %}
 
 {% block middle_content %}
@@ -77,7 +88,15 @@
             <input type="submit" class="btn-midnightblue" value="{{ _('Login to participate') }}">
         </form>
     {% endif %}
-    
+
+    {% if contest.format_name == 'thptqg' and contest.exam_papers.exists() and contest.is_in_contest(request.user) %}
+        <div class="contest-exam-launch">
+            <a class="btn-midnightblue contest-exam-launch-button" href="{{ url('contest_exam', contest.key) }}">
+                {{ _('Go to exam interface') }}
+            </a>
+        </div>
+    {% endif %}
+
     <div class="content-description">
         {% cache 3600 'contest_html' contest.id MATH_ENGINE %}
             {{ contest.description|markdown|reference|str|safe }}

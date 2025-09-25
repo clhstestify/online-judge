@@ -22,6 +22,7 @@ from django.db.models import (
     IntegerField,
     Max,
     Min,
+    Prefetch,
     Q,
     Sum,
     Value,
@@ -68,6 +69,7 @@ from judge.models import (
     Submission,
     ContestProblemClarification,
 )
+from judge.models.exam import ExamQuestion
 from judge.tasks import run_moss
 from judge.utils.celery import redirect_to_task_status
 from judge.utils.opengraph import generate_opengraph
@@ -84,6 +86,7 @@ from judge.utils.views import (
 from judge.widgets import HeavyPreviewPageDownWidget
 from judge.views.pagevote import PageVoteDetailView
 from judge.views.bookmark import BookMarkDetailView
+from judge.contest_format.thptqg import THPTQGContestFormat
 
 
 __all__ = [
@@ -762,6 +765,11 @@ class ContestStats(TitleMixin, ContestMixin, DetailView):
     template_name = "contest/stats.html"
     POINT_BIN = 10  # in point distribution
 
+    def get_template_names(self):
+        if isinstance(self.object.format, THPTQGContestFormat):
+            return ["contest/thptqg_stats.html"]
+        return super().get_template_names()
+
     def get_title(self):
         return _("%s Statistics") % self.object.name
 
@@ -770,6 +778,9 @@ class ContestStats(TitleMixin, ContestMixin, DetailView):
 
         if not (self.object.ended or self.can_edit):
             raise Http404()
+
+        if isinstance(self.object.format, THPTQGContestFormat):
+            return self._get_thptqg_context(context)
 
         queryset = Submission.objects.filter(contest_object=self.object)
 
@@ -868,6 +879,116 @@ class ContestStats(TitleMixin, ContestMixin, DetailView):
 
         context["stats"] = mark_safe(json.dumps(stats))
         context["problems"] = labels
+        return context
+
+    def _get_thptqg_context(self, context):
+        contest = self.object
+
+        papers = list(
+            contest.exam_papers.order_by("code").prefetch_related(
+                Prefetch(
+                    "questions",
+                    queryset=ExamQuestion.objects.order_by("part", "number").prefetch_related(
+                        "choices"
+                    ),
+                )
+            )
+        )
+
+        part_key_map = {
+            ExamQuestion.PART_MULTIPLE_CHOICE: "part1",
+            ExamQuestion.PART_TRUE_FALSE: "part2",
+            ExamQuestion.PART_SHORT_ANSWER: "part3",
+        }
+        part_titles = {
+            "part1": _("Part I – Multiple choice"),
+            "part2": _("Part II – True/False"),
+            "part3": _("Part III – Short answer"),
+        }
+
+        paper_details = []
+        max_counts = {key: 0 for key in part_titles.keys()}
+
+        for paper in papers:
+            answers = {key: {} for key in part_titles.keys()}
+            for question in paper.questions.all():
+                part_key = part_key_map.get(question.part)
+                if not part_key:
+                    continue
+
+                if question.part == ExamQuestion.PART_MULTIPLE_CHOICE:
+                    choice = next((c for c in question.choices.all() if c.is_correct), None)
+                    value = choice.key.upper() if choice else ""
+                elif question.part == ExamQuestion.PART_TRUE_FALSE:
+                    ordered_choices = list(question.choices.all())
+                    value = " ".join(
+                        _("Đ") if choice.is_correct else _("S")
+                        for choice in ordered_choices
+                    )
+                else:
+                    value = question.short_answer or ""
+
+                answers[part_key][question.number] = value
+                max_counts[part_key] = max(max_counts[part_key], question.number)
+
+            subject = paper.get_subject_display() if paper.subject else ""
+            if subject:
+                header = f"{paper.code} ({subject})"
+            else:
+                header = paper.code
+            paper_details.append({
+                "header": header,
+                "answers": answers,
+            })
+
+        parts = []
+        if paper_details:
+            for key, title in part_titles.items():
+                question_count = max_counts.get(key, 0)
+                if question_count <= 0:
+                    continue
+                rows = []
+                for number in range(1, question_count + 1):
+                    label = _("Question %(number)s") % {"number": number}
+                    values = [paper["answers"][key].get(number, "") for paper in paper_details]
+                    rows.append({"label": label, "values": values})
+                parts.append({"key": key, "title": title, "rows": rows})
+
+        if parts:
+            context["exam_answer_table"] = {
+                "headers": [paper["header"] for paper in paper_details],
+                "parts": parts,
+            }
+        else:
+            context["exam_answer_table"] = None
+
+        queryset = contest.users.filter(
+            virtual=ContestParticipation.LIVE,
+            is_disqualified=False,
+            exam_finalized_at__isnull=False,
+        ).values_list("score", flat=True)
+
+        score_counts = [0 for _ in range(11)]
+        for score in queryset:
+            if score is None:
+                continue
+            normalized = max(0.0, min(10.0, float(score)))
+            index = int(math.floor(normalized))
+            index = min(max(index, 0), 10)
+            score_counts[index] += 1
+
+        total = sum(score_counts)
+        percentages = [
+            round(count / total * 100, 2) if total else 0.0 for count in score_counts
+        ]
+        score_histogram = get_histogram([(float(i), percentages[i]) for i in range(11)])
+        context["score_distribution_data"] = mark_safe(json.dumps(score_histogram))
+        context["score_distribution_total"] = total
+        context["score_distribution_rows"] = [
+            {"score": i, "count": score_counts[i], "percent": percentages[i]}
+            for i in range(11)
+        ]
+
         return context
 
 

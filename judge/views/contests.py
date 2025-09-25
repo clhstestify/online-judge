@@ -580,7 +580,11 @@ class ContestJoin(LoginRequiredMixin, ContestMixin, BaseDetailView):
         profile.save()
         contest._updating_stats_only = True
         contest.update_user_count()
-        return HttpResponseRedirect(reverse("problem_list"))
+        if contest.format_name == "thptqg" and not participation.spectate:
+            destination = reverse("contest_exam", kwargs={"contest": contest.key})
+        else:
+            destination = reverse("problem_list")
+        return HttpResponseRedirect(destination)
 
     def ask_for_access_code(self, form=None):
         contest = self.object
@@ -869,8 +873,8 @@ class ContestStats(TitleMixin, ContestMixin, DetailView):
 
 ContestRankingProfile = namedtuple(
     "ContestRankingProfile",
-    "id user css_class username points cumtime tiebreaker organization participation "
-    "participation_rating problem_cells result_cell",
+    "id user css_class username points cumtime tiebreaker exam_code organization "
+    "participation participation_rating problem_cells result_cell",
 )
 
 BestSolutionData = namedtuple("BestSolutionData", "code points time state is_pretested")
@@ -886,6 +890,11 @@ def make_contest_ranking_profile(contest, participation, contest_problems):
         points=participation.score,
         cumtime=participation.cumtime,
         tiebreaker=participation.tiebreaker,
+        exam_code=(
+            participation.assigned_exam_paper.code
+            if participation.assigned_exam_paper
+            else None
+        ),
         organization=user.organization,
         participation_rating=participation.rating.rating
         if hasattr(participation, "rating")
@@ -928,11 +937,14 @@ def get_contest_ranking_list(
     show_current_virtual=False,
     ranker=ranker,
 ):
-    problems = list(
-        contest.contest_problems.select_related("problem")
-        .defer("problem__description")
-        .order_by("order")
-    )
+    if contest.format_name == "thptqg":
+        problems = contest.format.get_virtual_parts()
+    else:
+        problems = list(
+            contest.contest_problems.select_related("problem")
+            .defer("problem__description")
+            .order_by("order")
+        )
 
     users = ranker(
         ranking_list(contest, problems),

@@ -1,0 +1,139 @@
+{% extends "two-column-content.html" %}
+{% set page_type = 'stats' %}
+
+{% block left_sidebar %}
+    {% include "contest/contest-tabs.html" %}
+{% endblock %}
+
+{% block two_col_js %}
+    <script type="text/javascript">
+        window.scoreDistribution = {{ score_distribution_data|default('{}') }};
+    </script>
+    {% compress js %}
+        {% include "stats/media-js.html" %}
+        <script type="text/javascript">
+            $(function () {
+                if (window.scoreDistribution && window.scoreDistribution.labels) {
+                    draw_histogram(window.scoreDistribution, $('#score-distribution'));
+                }
+            });
+        </script>
+    {% endcompress %}
+    {% include "contest/media-js.html" %}
+{% endblock %}
+
+{% block two_col_media %}
+    <style>
+        .exam-answers-table {
+            overflow-x: auto;
+            margin-bottom: 1.5em;
+        }
+
+        .exam-answers-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .exam-answers-table th,
+        .exam-answers-table td {
+            border: 1px solid #ddd;
+            padding: 6px 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .exam-answers-table th:first-child,
+        .exam-answers-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .score-summary-table {
+            border-collapse: collapse;
+            margin-top: 1em;
+        }
+
+        .score-summary-table th,
+        .score-summary-table td {
+            border: 1px solid #ddd;
+            padding: 4px 8px;
+            text-align: right;
+        }
+
+        .score-summary-table th:first-child,
+        .score-summary-table td:first-child {
+            text-align: left;
+        }
+
+        .score-distribution-summary {
+            margin-top: 0.5em;
+            font-style: italic;
+        }
+    </style>
+{% endblock %}
+
+{% block middle_content %}
+    {% if exam_answer_table %}
+        <h3>{{ _('Answer keys by exam code') }}</h3>
+        {% for part in exam_answer_table.parts %}
+            <h4>{{ part.title }}</h4>
+            <div class="exam-answers-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>{{ _('Question') }}</th>
+                            {% for header in exam_answer_table.headers %}
+                                <th>{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in part.rows %}
+                            <tr>
+                                <td>{{ row.label }}</td>
+                                {% for value in row.values %}
+                                    <td>{{ value }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>{{ _('No answer keys are available for this contest.') }}</p>
+    {% endif %}
+
+    <h3>{{ _('Score distribution (0–10)') }}</h3>
+    <div id="score-distribution" class="chart">
+        <canvas></canvas>
+    </div>
+
+    {% if score_distribution_total %}
+        <p class="score-distribution-summary">
+            {{ _('Based on %(count)s finalized participations.') % {'count': score_distribution_total} }}
+        </p>
+        <div class="exam-answers-table">
+            <table class="score-summary-table">
+                <thead>
+                    <tr>
+                        <th>{{ _('Score') }}</th>
+                        <th>{{ _('Participants') }}</th>
+                        <th>{{ _('%') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in score_distribution_rows %}
+                        <tr>
+                            <td>{{ row.score }}</td>
+                            <td>{{ row.count }}</td>
+                            <td>{{ row.percent|floatformat:2 }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="score-distribution-summary">{{ _('No finalized participations to display.') }}</p>
+    {% endif %}
+{% endblock %}

@@ -602,7 +602,7 @@
                 {% trans count=part_counts.part2 %}Part II: {{ count }} questions × 4 statements{% endtrans %}{% if has_part3 and part_counts.part3 %},
                 {% trans count=part_counts.part3 %}Part III: {{ count }} questions{% endtrans %}{% endif %}
             </div>
-            <div class="exam-code">{{ _('Exam code: %(code)s')|format(code=exam_code) }}</div>
+            <div class="exam-code">{% trans code=exam_code %}Exam code: {{ code }}{% endtrans %}</div>
         </div>
         {% if participation.end_time %}
             <div class="exam-timer">

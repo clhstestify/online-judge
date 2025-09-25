@@ -21,13 +21,41 @@
     {% include "actionbar/media-css.html" %}
     <style>
         .contest-exam-launch {
-            margin: 1rem 0;
+            margin: 1.5rem 0;
+            text-align: center;
         }
 
         .contest-exam-launch-button {
-            display: inline-block;
-            padding: 0.65rem 1.5rem;
-            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            padding: 0.85rem 2.4rem;
+            font-size: 1.05rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-radius: 0.5rem;
+            box-shadow: rgba(15, 23, 42, 0.16) 0 12px 24px -12px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            animation: contest-exam-button-pulse 3s ease-in-out infinite;
+        }
+
+        .contest-exam-launch-button:hover,
+        .contest-exam-launch-button:focus-visible {
+            transform: translateY(-2px);
+            box-shadow: rgba(15, 23, 42, 0.28) 0 18px 32px -12px;
+            animation-play-state: paused;
+        }
+
+        @keyframes contest-exam-button-pulse {
+            0%,
+            100% {
+                box-shadow: rgba(15, 23, 42, 0.16) 0 12px 24px -12px;
+            }
+
+            50% {
+                box-shadow: rgba(29, 78, 216, 0.4) 0 16px 32px -14px;
+            }
         }
     </style>
 {% endblock %}
@@ -91,7 +119,7 @@
 
     {% if contest.format_name == 'thptqg' and contest.exam_papers.exists() and contest.is_in_contest(request.user) %}
         <div class="contest-exam-launch">
-            <a class="btn-midnightblue contest-exam-launch-button" href="{{ url('contest_exam', contest.key) }}">
+            <a class="button btn-midnightblue contest-exam-launch-button" href="{{ url('contest_exam', contest.key) }}">
                 {{ _('Go to exam interface') }}
             </a>
         </div>

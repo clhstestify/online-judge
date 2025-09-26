@@ -145,6 +145,216 @@
             padding: 1.75rem 2rem;
         }
 
+        .question-summary-panel {
+            margin-bottom: 1.5rem;
+            padding: 1.25rem 1.5rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            position: sticky;
+            top: 1rem;
+            z-index: 2;
+        }
+
+        .question-summary-title {
+            margin: 0 0 1rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .question-summary-section + .question-summary-section {
+            margin-top: 1rem;
+        }
+
+        .question-summary-section h3 {
+            margin: 0 0 0.65rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #475569;
+        }
+
+        .question-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+            gap: 0.45rem;
+        }
+
+        .question-summary-item {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 0.95rem;
+            color: #1e293b;
+            background: #e2e8f0;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+        }
+
+        .question-summary-item:hover,
+        .question-summary-item:focus-visible {
+            transform: translateY(-1px);
+            box-shadow: rgba(15, 23, 42, 0.18) 0 8px 18px -8px;
+            text-decoration: none;
+        }
+
+        .question-status-unanswered {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .question-status-answered {
+            background: #bfdbfe;
+            color: #1d4ed8;
+        }
+
+        .question-status-correct {
+            background: #34d399;
+            color: #064e3b;
+        }
+
+        .question-status-incorrect {
+            background: #fca5a5;
+            color: #7f1d1d;
+        }
+
+        .question-status-partial {
+            background: #fcd34d;
+            color: #92400e;
+        }
+
+        .question-summary-legend {
+            margin-top: 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 0.75rem;
+            font-size: 0.85rem;
+            color: #475569;
+        }
+
+        .question-summary-legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .question-summary-legend span::before {
+            content: "";
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            background: currentColor;
+            opacity: 0.35;
+        }
+
+        .question-summary-legend .legend-unanswered::before {
+            background: #94a3b8;
+            opacity: 0.4;
+        }
+
+        .question-summary-legend .legend-answered::before {
+            background: #60a5fa;
+            opacity: 0.6;
+        }
+
+        .question-summary-legend .legend-correct::before {
+            background: #34d399;
+            opacity: 0.9;
+        }
+
+        .question-summary-legend .legend-incorrect::before {
+            background: #f87171;
+            opacity: 0.9;
+        }
+
+        .question-summary-legend .legend-partial::before {
+            background: #f59e0b;
+            opacity: 0.9;
+        }
+
+        .question-feedback {
+            margin-top: 0.75rem;
+            padding: 0.85rem 1rem;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            color: #0f172a;
+            width: 100%;
+            word-break: break-word;
+        }
+
+        .question-feedback strong {
+            font-weight: 700;
+        }
+
+        .question-feedback .feedback-status {
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+
+        .question-feedback.question-status-correct {
+            border-color: #34d399;
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .question-feedback.question-status-incorrect {
+            border-color: #f87171;
+            background: #fef2f2;
+            color: #7f1d1d;
+        }
+
+        .question-feedback.question-status-partial {
+            border-color: #f59e0b;
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .question-feedback.question-status-unanswered {
+            border-color: #cbd5f5;
+            background: #f8fafc;
+            color: #475569;
+        }
+
+        .statement-block.question-status-correct {
+            border-style: solid;
+            border-color: #34d399;
+            background: #ecfdf5;
+        }
+
+        .statement-block.question-status-incorrect {
+            border-style: solid;
+            border-color: #f87171;
+            background: #fef2f2;
+        }
+
+        .statement-block.question-status-unanswered {
+            border-style: dashed;
+            border-color: #cbd5f5;
+            background: #f8fafc;
+        }
+
+        .statement-block.question-status-partial {
+            border-style: solid;
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .statement-block.question-status-answered {
+            border-style: solid;
+            border-color: #bfdbfe;
+            background: #eff6ff;
+        }
+
+        .question-feedback-answers {
+            display: grid;
+            gap: 0.25rem;
+        }
+
         .sheet-section {
             margin-bottom: 1.75rem;
         }
@@ -174,14 +384,43 @@
 
         .bubble-row {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.75rem;
             padding: 0.8rem 1rem;
             border: 1px solid #e2e8f0;
             border-radius: 10px;
             background: #f8fafc;
+            flex-wrap: wrap;
         }
 
+        .bubble-row.question-status-correct,
+        .true-false-row.question-status-correct,
+        .short-answer-row.question-status-correct {
+            border-color: #34d399;
+            background: #ecfdf5;
+        }
+
+        .bubble-row.question-status-incorrect,
+        .true-false-row.question-status-incorrect,
+        .short-answer-row.question-status-incorrect {
+            border-color: #f87171;
+            background: #fef2f2;
+        }
+
+        .bubble-row.question-status-partial,
+        .true-false-row.question-status-partial,
+        .short-answer-row.question-status-partial {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .bubble-row.question-status-answered,
+        .true-false-row.question-status-answered,
+        .short-answer-row.question-status-answered {
+            border-color: #bfdbfe;
+            background: #eff6ff;
+        }
+        
         .bubble-number {
             font-weight: 700;
             color: #1d3557;
@@ -192,6 +431,7 @@
         .bubble-options {
             display: flex;
             gap: 0.55rem;
+            flex-wrap: wrap;
         }
 
         .bubble-option {
@@ -218,6 +458,20 @@
             color: #475569;
             transition: all 0.2s ease;
             background: #ffffff;
+        }
+
+        .bubble-option.is-correct-choice span {
+            background: #34d399;
+            border-color: #22c55e;
+            color: #ffffff;
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+        }
+
+        .bubble-option.is-user-choice span {
+            background: #fca5a5;
+            border-color: #f87171;
+            color: #7f1d1d;
+            box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.2);
         }
 
         .bubble-option input:checked + span {
@@ -314,12 +568,17 @@
 
         .short-answer-row {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.75rem;
             padding: 0.75rem 1rem;
             border: 1px solid #e2e8f0;
             border-radius: 10px;
             background: #f8fafc;
+            flex-wrap: wrap;
+        }
+
+        .short-answer-input {
+            flex: 1 1 220px;
         }
 
         .short-answer-field {
@@ -768,6 +1027,36 @@
         </div>
 
         <div class="exam-sheet">
+            <div class="question-summary-panel">
+                <div class="question-summary-title">{{ _('Question list') }}</div>
+                {% for section in question_overview %}
+                    {% if section.entries %}
+                        <div class="question-summary-section">
+                            <h3>{{ section.title }}</h3>
+                            <div class="question-summary-grid">
+                                {% for item in section.entries %}
+                                    <a href="{{ item.url }}"
+                                       class="question-summary-item question-status-{{ item.status }}"
+                                       title="{{ item.tooltip }}">
+                                        {{ item.label }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="question-summary-legend">
+                    {% if show_exam_results %}
+                        <span class="legend-correct">{{ _('Correct') }}</span>
+                        <span class="legend-incorrect">{{ _('Incorrect') }}</span>
+                        <span class="legend-partial">{{ _('Partially correct') }}</span>
+                        <span class="legend-unanswered">{{ _('No answer') }}</span>
+                    {% else %}
+                        <span class="legend-answered">{{ _('Answered') }}</span>
+                        <span class="legend-unanswered">{{ _('No answer') }}</span>
+                    {% endif %}
+                </div>
+            </div>
             <form method="post" id="exam-form">
                 {% csrf_token %}
                 {{ form.non_field_errors|safe }}
@@ -784,16 +1073,29 @@
                     </h2>
                     <div class="bubble-grid">
                         {% for question, field in form.iter_part1() %}
-                            <div class="bubble-row">
+                            {% set feedback = question_feedback.get(question.id) %}
+                            {% set row_status = feedback.status if feedback else 'unanswered' %}
+                            {% set correct_choices = feedback.get('correct_choices', []) if feedback else [] %}
+                            {% set selected_choice = feedback.get('selected_choice') if feedback else '' %}
+                            <div class="bubble-row question-status-{{ row_status }}" id="question-part1-{{ question.number }}">
                                 <div class="bubble-number">{{ question.number }}</div>
                                 <div class="bubble-options">
                                     {% for radio in field %}
-                                        <label class="bubble-option">
+                                        <label class="bubble-option{% if show_exam_results and feedback %}{% if radio.choice_value in correct_choices %} is-correct-choice{% elif radio.choice_value == selected_choice %} is-user-choice{% endif %}{% endif %}">
                                             {{ radio.tag()|safe }}
                                             <span>{{ radio.choice_label }}</span>
                                         </label>
                                     {% endfor %}
                                 </div>
+                                {% if feedback and show_exam_results %}
+                                    <div class="question-feedback question-status-{{ row_status }}">
+                                        <div class="feedback-status">{{ feedback.result_label }}</div>
+                                        <div class="question-feedback-answers">
+                                            <div><strong>{{ _('Your answer:') }}</strong> {{ feedback.user_display }}</div>
+                                            <div><strong>{{ _('Correct answer:') }}</strong> {{ feedback.correct_display }}</div>
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </div>
                         {% endfor %}
                     </div>
@@ -811,11 +1113,15 @@
                     </h2>
                     <div class="true-false-grid">
                         {% for question, statements in form.iter_part2() %}
-                            <div class="true-false-row">
+                            {% set feedback = question_feedback.get(question.id) %}
+                            {% set row_status = feedback.status if feedback else 'unanswered' %}
+                            <div class="true-false-row question-status-{{ row_status }}" id="question-part2-{{ question.number }}">
                                 <div class="bubble-number">{{ question.number }}</div>
                                 <div class="true-false-statements">
                                     {% for choice, field in statements %}
-                                        <div class="statement-block">
+                                        {% set statement = feedback.statement_map.get(choice.id) if feedback and feedback.statement_map else None %}
+                                        {% set statement_status = statement.status if statement else row_status %}
+                                        <div class="statement-block question-status-{{ statement_status }}">
                                             <div class="statement-label">{{ choice.key|upper }}</div>
                                             <div class="statement-options">
                                                 {% for radio in field %}
@@ -828,6 +1134,15 @@
                                         </div>
                                     {% endfor %}
                                 </div>
+                                {% if feedback and show_exam_results %}
+                                    <div class="question-feedback question-status-{{ row_status }}">
+                                        <div class="feedback-status">{{ feedback.result_label }}</div>
+                                        <div class="question-feedback-answers">
+                                            <div><strong>{{ _('Your answer:') }}</strong> {{ feedback.user_display }}</div>
+                                            <div><strong>{{ _('Correct answer:') }}</strong> {{ feedback.correct_display }}</div>
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </div>
                         {% endfor %}
                     </div>
@@ -846,11 +1161,22 @@
                         </h2>
                         <div class="short-answer-grid">
                             {% for question, field in form.iter_part3() %}
-                                <div class="short-answer-row">
+                                {% set feedback = question_feedback.get(question.id) %}
+                                {% set row_status = feedback.status if feedback else 'unanswered' %}
+                                <div class="short-answer-row question-status-{{ row_status }}" id="question-part3-{{ question.number }}">
                                     <div class="bubble-number">{{ question.number }}</div>
                                     <div class="short-answer-input">
                                         {{ field|safe }}
                                     </div>
+                                    {% if feedback and show_exam_results %}
+                                        <div class="question-feedback question-status-{{ row_status }}">
+                                            <div class="feedback-status">{{ feedback.result_label }}</div>
+                                            <div class="question-feedback-answers">
+                                                <div><strong>{{ _('Your answer:') }}</strong> {{ feedback.user_display }}</div>
+                                                <div><strong>{{ _('Correct answer:') }}</strong> {{ feedback.correct_display }}</div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             {% endfor %}
                         </div>

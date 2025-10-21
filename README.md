@@ -9,6 +9,7 @@
 - Trình chấm tự động hỗ trợ nhiều ngôn ngữ: Assembly (x64), AWK, Brainfxck, C, C++03/11/14/17/20, Java 8/11, Scratch, Pascal, Perl, Python 2/3, PyPy 2/3.
 - Tích hợp phát hiện đạo văn thông qua [Stanford MOSS](https://theory.stanford.edu/~aiken/moss/).
 - Hệ thống bảng xếp hạng thời gian thực, event trực tiếp bằng WebSocket và newsletter tương tác với thí sinh.
+- Contest format **Codeforces** tái hiện đầy đủ luật tính điểm chính thức (dynamic scoring, penalty, freeze) cho kỳ thi lập trình đối kháng.
 
 ### Thể thức trắc nghiệm THPTQG 2025
 - Contest format **THPTQG Exam** chấm điểm theo thang 0–10 dựa trên tổng điểm tối đa của từng phần và hiển thị chi tiết số điểm/ý đúng trên bảng xếp hạng.

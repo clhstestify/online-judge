@@ -10,6 +10,7 @@
 - Tích hợp phát hiện đạo văn thông qua [Stanford MOSS](https://theory.stanford.edu/~aiken/moss/).
 - Hệ thống bảng xếp hạng thời gian thực, event trực tiếp bằng WebSocket và newsletter tương tác với thí sinh.
 - Contest format **Codeforces** tái hiện đầy đủ luật tính điểm chính thức (dynamic scoring, penalty, freeze) cho kỳ thi lập trình đối kháng.
+- Nguồn dữ liệu tương thích **ICPC Resolver**, tự động đồng bộ contest dạng ICPC qua bộ API `/icpc/…` và feed sự kiện NDJSON.
 
 ### Thể thức trắc nghiệm THPTQG 2025
 - Contest format **THPTQG Exam** chấm điểm theo thang 0–10 dựa trên tổng điểm tối đa của từng phần và hiển thị chi tiết số điểm/ý đúng trên bảng xếp hạng.
@@ -92,6 +93,58 @@ Các gói bổ sung `python-docx` và `pdfminer.six` được sử dụng để 
    ```bash
    node websocket/daemon.js
    ```
+
+## Tích hợp ICPC Resolver
+### Tính năng
+- Cung cấp đầy đủ metadata contest (problems, teams, organizations, languages) theo schema ICPC.
+- API scoreboard và event feed NDJSON giúp resolver xem live hoặc phát lại diễn tiến contest.
+- Tự đồng bộ penalty, trạng thái freeze/thaw và đánh dấu First-To-Solve theo dữ liệu thật từ OJ.
+
+### Điều kiện & phân quyền
+1. Contest phải dùng format **ICPC** và mở freeze giống luật chính thức (nếu cần).
+2. Tài khoản dùng cho resolver cần có quyền xem full scoreboard (thường là staff hoặc tài khoản service được thêm vào contest và bật tùy chọn "Show full scoreboard").
+3. Resolver cần đăng nhập trước khi truy cập API; hỗ trợ cookie session chuẩn của Django.
+
+### Danh sách endpoint
+| Mục đích | Đường dẫn |
+| --- | --- |
+| Danh sách contest | `/icpc/contests`
+| Thông tin contest | `/icpc/contests/<contest-key>`
+| Danh sách bài | `/icpc/contests/<contest-key>/problems`
+| Tổ chức | `/icpc/contests/<contest-key>/organizations`
+| Đội/Thí sinh | `/icpc/contests/<contest-key>/teams`
+| Ngôn ngữ | `/icpc/contests/<contest-key>/languages`
+| Kết quả chấm | `/icpc/contests/<contest-key>/judgement-types`
+| Scoreboard snapshot | `/icpc/contests/<contest-key>/scoreboard`
+| Event feed (NDJSON) | `/icpc/contests/<contest-key>/event-feed`
+
+Các endpoint tuân thủ schema của [ICPC Contest API](https://icpc.io/contest-api), vì vậy resolver sẽ đọc được scoreboard, submissions và judgements trực tiếp từ OJ.
+
+### Cấu hình resolver mẫu
+Tạo file `qtoj-resolver.properties` cho icpctools Resolver:
+
+```properties
+siteTitle=QTOJ ICPC Feed
+contestId=summer-camp-2025
+contestURL=https://quangtrioj.edu.vn/icpc/contests/${contestId}
+eventFeedURL=https://quangtrioj.edu.vn/icpc/contests/${contestId}/event-feed
+loginURL=https://quangtrioj.edu.vn/accounts/login/
+loginUser=resolver-bot
+loginPassword=<mật_khẩu_dịch_vụ>
+```
+
+Sau đó chạy resolver:
+
+```bash
+./resolver-cli --config qtoj-resolver.properties
+```
+
+Resolver sẽ tự đăng nhập, tải metadata (contests, problems, languages, teams) và live update thông qua NDJSON feed. Hệ thống freeze/penalty được phản ánh đầy đủ nhờ các trường `scoreboard_freeze_duration`, `penalty_time` và `penalty_type` trong API.
+
+### Lưu ý vận hành
+- Nếu contest cho phép mọi ngôn ngữ, endpoint `/languages` sẽ trả về toàn bộ danh sách ngôn ngữ có trên hệ thống.
+- Event feed liệt kê submissions và judgements theo thứ tự thời gian, thích hợp để phát live hoặc chạy lại replay.
+- Khi contest kết thúc, các sự kiện `state.finalized=true` giúp resolver tự động chuyển sang bảng xếp hạng cuối cùng.
 ## Bảo trì
 1. **Cập nhật dịch thuật**
    ```bash

@@ -41,6 +41,7 @@ from judge.views import (
     blog,
     comment,
     contests,
+    icpc_resolver,
     language,
     license,
     mailgun,
@@ -749,6 +750,54 @@ urlpatterns = [
                 url(r"^user/list$", api.api_v1_user_list),
                 url(r"^user/info/(\w+)$", api.api_v1_user_info),
                 url(r"^user/submissions/(\w+)$", api.api_v1_user_submissions),
+            ]
+        ),
+    ),
+    url(
+        r"^icpc/",
+        include(
+            [
+                url(r"^contests$", icpc_resolver.contest_list, name="icpc_contests"),
+                url(
+                    r"^contests/(?P<contest_id>[^/]+)$",
+                    icpc_resolver.contest_detail,
+                    name="icpc_contest_detail",
+                ),
+                url(
+                    r"^contests/(?P<contest_id>[^/]+)/problems$",
+                    icpc_resolver.contest_problem_list,
+                    name="icpc_contest_problems",
+                ),
+                url(
+                    r"^contests/(?P<contest_id>[^/]+)/organizations$",
+                    icpc_resolver.contest_organization_list,
+                    name="icpc_contest_organizations",
+                ),
+                url(
+                    r"^contests/(?P<contest_id>[^/]+)/teams$",
+                    icpc_resolver.contest_team_list,
+                    name="icpc_contest_teams",
+                ),
+                url(
+                    r"^contests/(?P<contest_id>[^/]+)/languages$",
+                    icpc_resolver.contest_language_list,
+                    name="icpc_contest_languages",
+                ),
+                url(
+                    r"^contests/(?P<contest_id>[^/]+)/judgement-types$",
+                    icpc_resolver.contest_judgement_type_list,
+                    name="icpc_contest_judgement_types",
+                ),
+                url(
+                    r"^contests/(?P<contest_id>[^/]+)/scoreboard$",
+                    icpc_resolver.contest_scoreboard,
+                    name="icpc_contest_scoreboard",
+                ),
+                url(
+                    r"^contests/(?P<contest_id>[^/]+)/event-feed$",
+                    icpc_resolver.contest_event_feed,
+                    name="icpc_contest_event_feed",
+                ),
             ]
         ),
     ),

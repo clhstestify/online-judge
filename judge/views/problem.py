@@ -288,6 +288,36 @@ class ProblemDetail(
                     0,
                 )
 
+            if contest_problem.contest.format_name == "codeforces":
+                participation = user.profile.current_contest
+                elapsed_seconds = max(
+                    (timezone.now() - participation.start).total_seconds(), 0
+                )
+                elapsed_minutes = int(elapsed_seconds // 60)
+
+                contest = contest_problem.contest
+                contest_points_overview = []
+                for index, cp in enumerate(
+                    contest.contest_problems.select_related("problem").order_by("order")
+                ):
+                    base_points = float(cp.points)
+                    dynamic_score = base_points - (base_points * elapsed_minutes / 250.0)
+                    current_points = max(0.3 * base_points, dynamic_score)
+                    current_points = round(
+                        max(current_points, 0.0), contest.points_precision
+                    )
+                    contest_points_overview.append(
+                        {
+                            "label": contest.get_label_for_problem(index),
+                            "code": cp.problem.code,
+                            "name": cp.problem.name,
+                            "current_points": current_points,
+                        }
+                    )
+
+                context["contest_points_precision"] = contest.points_precision
+                context["contest_points_overview"] = contest_points_overview
+
         context["available_judges"] = Judge.objects.filter(
             online=True, problems=self.object
         )

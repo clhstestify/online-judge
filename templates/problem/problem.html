@@ -75,6 +75,56 @@
         #comment-section {
             display: none;
         }
+
+        .contest-points-box {
+            background: #f7f7f7;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 0.6em 0.8em;
+            margin-bottom: 1em;
+        }
+
+        .contest-points-header {
+            font-weight: bold;
+            margin-bottom: 0.4em;
+            display: flex;
+            align-items: center;
+            gap: 0.4em;
+        }
+
+        .contest-points-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .contest-point-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.25em 0;
+        }
+
+        .contest-point-link {
+            display: inline-flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            margin-right: 0.5em;
+        }
+
+        .contest-point-label {
+            font-weight: bold;
+        }
+
+        .contest-point-name {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .contest-point-value {
+            font-family: monospace;
+        }
     </style>
 {% endblock %}
 
@@ -190,6 +240,25 @@
         <a href="{{ url('problem_submit', problem.code) }}" class="unselectable button full btn-green small">
             {{ _('Submit solution') }}
         </a>
+    {% endif %}
+
+    {% if contest_points_overview %}
+        <div class="contest-points-box">
+            <div class="contest-points-header">
+                <i class="fa fa-bolt"></i> {{ _('Codeforces points remaining') }}
+            </div>
+            <ul class="contest-points-list">
+                {% for contest_points in contest_points_overview %}
+                    <li class="contest-point-item">
+                        <a class="contest-point-link" href="{{ url('problem_detail', contest_points.code) }}">
+                            <span class="contest-point-label">{{ contest_points.label }}</span>
+                            <span class="contest-point-name">{{ contest_points.name }}</span>
+                        </a>
+                        <span class="contest-point-value">{{ contest_points.current_points|floatformat(-contest_points_precision) }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     {% endif %}
 
     <hr style="padding-bottom: 0.3em">
